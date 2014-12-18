@@ -1,20 +1,23 @@
+#!/usr/bin/python3
 import subprocess
 import os
 import time
 from braillegraph import horizontal_graph
 
+version = "0.1"
+
 
 class pingVisualizer(object):
-    def __init__(self, **kwargs):
+    def __init__(self, arguments=None):
         self.configDict = {
             'timeInterval': 2,
             'pingListLen': 50,
             'adress': '127.0.0.1',
             'maxHeightValue': 50,
-            'pings': 200
+            'pings': 200,
         }
-        self.configDict.update(kwargs)
-        self.timeInterval = self.configDict['timeInterval']
+        if arguments is not None: self.configDict.update(arguments)
+        self.timeInterval = float(self.configDict['timeInterval'])
         self.pingListLen = self.configDict['pingListLen']
         self.adress = self.configDict['adress']
         self.maxHeightValue = self.configDict['maxHeightValue']
@@ -26,12 +29,7 @@ class pingVisualizer(object):
         args = ['ping', self.adress, '-c 1']
         p = subprocess.Popen(args, stdout=subprocess.PIPE)
         out = str(p.stdout.read())
-        outlist = out.split('\\n')
-        outlist = outlist[1].split('=')
-        pingtime = outlist[-1].split(' d')[0]
-        pingtime = float(
-            ''.join(number for number in pingtime if number in digits))
-        return pingtime
+        return float(out[out.find('time=')+5:out.find(' ms')])
 
     def visualizeHorizontal(self):
         minLengthValue = 0
@@ -56,5 +54,43 @@ class pingVisualizer(object):
 
 
 if __name__ == "__main__":
-    visualizer = pingVisualizer(maxHeightValue=100)
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="This is a pingvisualizer!"
+        )
+    parser.add_argument(
+        '-v',
+        '--version',
+        action='version',
+        version=version)
+    parser.add_argument(
+        'adress',
+        help="Which adress to ping",
+        action='store')
+    parser.add_argument(
+        '--timeinterval',
+        '-t',
+        action='store',
+        help="How often to ping",
+        dest="timeInterval")
+    parser.add_argument(
+        '--listlength',
+        '-l',
+        action='store',
+        help="How long the plot will be",
+        dest="pingListLen")
+    parser.add_argument(
+        '--height',
+        '-H',
+        action='store',
+        help="How hig the plot will be",
+        dest="maxHeightValue")
+    parser.add_argument(
+        '--pings',
+        '-p',
+        action='store',
+        help="How hig many times to ping",
+        dest="pings")
+    args = parser.parse_args()
+    visualizer = pingVisualizer(vars(args))
     visualizer.visualizeHorizontal()
