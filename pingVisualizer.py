@@ -16,7 +16,12 @@ class pingVisualizer(object):
             'maxHeightValue': 50,
             'pings': 200,
         }
-        if arguments is not None: self.configDict.update(arguments)
+        if arguments is not None:
+            #self.configDict.update(arguments)
+            print(arguments)
+            for key, value in arguments:
+                if value is not None:
+                    self.configDict[key] = value
         self.timeInterval = float(self.configDict['timeInterval'])
         self.pingListLen = self.configDict['pingListLen']
         self.adress = self.configDict['adress']
@@ -70,27 +75,31 @@ if __name__ == "__main__":
     parser.add_argument(
         '--timeinterval',
         '-t',
-        action='store',
+        action='store_const',
         help="How often to ping",
-        dest="timeInterval")
+        dest="timeInterval",
+        const=2)
     parser.add_argument(
         '--listlength',
         '-l',
-        action='store',
+        action='store_const',
         help="How long the plot will be",
-        dest="pingListLen")
+        dest="pingListLen",
+        const=50)
     parser.add_argument(
         '--height',
         '-H',
-        action='store',
+        action='store_const',
         help="How hig the plot will be",
-        dest="maxHeightValue")
+        dest="maxHeightValue",
+        const=50)
     parser.add_argument(
         '--pings',
         '-p',
-        action='store',
+        action='store_const',
         help="How hig many times to ping",
-        dest="pings")
+        dest="pings",
+        const=20)
     args = parser.parse_args()
     visualizer = pingVisualizer(vars(args))
     visualizer.visualizeHorizontal()
