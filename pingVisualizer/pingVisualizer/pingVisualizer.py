@@ -79,7 +79,7 @@ class pingVisualizer(object):
                 k = self.maxHeightValue / maxValue
                 valuelist = [int(value * k) for value in pingList]
                 print('{}'.format(horizontal_graph(valuelist)))
-                print('Max: {} ms \nMin: {}\nActual: {} \nAdress: {}'.format(
+                print('Max: {} ms \nMin: {} ms \nActual: {} ms \nAdress: {}'.format(
                     maxValue, minValue, pingList[-1], self.adress))
             time.sleep(self.timeInterval)
 
