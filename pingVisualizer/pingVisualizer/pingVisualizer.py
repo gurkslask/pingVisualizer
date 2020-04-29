@@ -37,7 +37,7 @@ class pingVisualizer(object):
         self.platform = sys.platform
 
     def getPingTime(self):
-        if 'linux' in self.platform:
+        if 'linux' in self.platform or 'darwin' in self.platform:
             #If Linux
             from string import digits
             digits = digits + '.' + ','
